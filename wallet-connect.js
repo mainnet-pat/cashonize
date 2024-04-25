@@ -817,9 +817,6 @@ Web3Wallet.init({
           }
           template.supported = ["BCH_SPEC"];
 
-          // configure compiler
-          const compiler = authenticationTemplateToCompilerBCH(template);
-
           const txTemplate = {...tx};
 
           // decode private key for current signer
@@ -872,7 +869,9 @@ Web3Wallet.init({
 
               input.unlockingBytecode = hexToBin(unlockingBytecodeHex);
             } else {
-              // replace unlocking bytecode for non-contract inputs having placeholder unlocking bytecode
+              // configure compiler
+              const compiler = authenticationTemplateToCompilerBCH(template);
+
               const sourceOutput = sourceOutputsUnpacked[index];
               if (!sourceOutput.unlockingBytecode?.length && toCashaddr(sourceOutput.lockingBytecode) === signingAddress) {
                 input.unlockingBytecode = {
