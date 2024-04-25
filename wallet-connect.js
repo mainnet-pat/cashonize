@@ -815,6 +815,7 @@ Web3Wallet.init({
           if (typeof template === "string") {
             throw new Error("Transaction template error");
           }
+          template.supported = ["BCH_SPEC"];
 
           // configure compiler
           const compiler = authenticationTemplateToCompilerBCH(template);
