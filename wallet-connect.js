@@ -815,7 +815,12 @@ Web3Wallet.init({
           if (typeof template === "string") {
             throw new Error("Transaction template error");
           }
+
+          template.scripts.unlock.script = "<key.schnorr_signature.all_outputs_all_utxos>\n<key.public_key>"
           template.supported = ["BCH_SPEC"];
+
+          // configure compiler
+          const compiler = authenticationTemplateToCompilerBCH(template);
 
           const txTemplate = {...tx};
 
@@ -869,9 +874,7 @@ Web3Wallet.init({
 
               input.unlockingBytecode = hexToBin(unlockingBytecodeHex);
             } else {
-              // configure compiler
-              const compiler = authenticationTemplateToCompilerBCH(template);
-
+              // replace unlocking bytecode for non-contract inputs having placeholder unlocking bytecode
               const sourceOutput = sourceOutputsUnpacked[index];
               if (!sourceOutput.unlockingBytecode?.length && toCashaddr(sourceOutput.lockingBytecode) === signingAddress) {
                 input.unlockingBytecode = {
